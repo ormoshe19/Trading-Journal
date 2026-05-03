@@ -18,10 +18,14 @@ import {
 import { db } from "./firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
+import Welcome from "./components/Welcome";
+
 function App() {
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem("activeTab") || "dashboard";
   });
+
+const [showWelcome, setShowWelcome] = useState(true);
 
   const [journals, setJournals] = useState(() => {
     const saved = localStorage.getItem("journals");
@@ -485,6 +489,10 @@ if (!user) {
       <button onClick={handleLogin}>Login</button>
     </div>
   );
+}
+
+if (showWelcome && !user) {
+  return <Welcome onStart={() => setShowWelcome(false)} />;
 }
 
   return (
