@@ -77,13 +77,9 @@ function Welcome({ onStart }) {
             marginBottom: 70,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Logo />
-            <div>
-              <div style={{ fontWeight: 900, fontSize: 18 }}>EdgeJournal</div>
-              <div style={{ color: "#94a3b8", fontSize: 12 }}>Performance Lab</div>
-            </div>
-          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+  <Logo />
+</div>
 
           <button
             onClick={onStart}
@@ -98,7 +94,7 @@ function Welcome({ onStart }) {
               backdropFilter: "blur(10px)",
             }}
           >
-            Login
+            Get Started
           </button>
         </nav>
 
@@ -182,7 +178,7 @@ function Welcome({ onStart }) {
                   transition: ".25s ease",
                 }}
               >
-                Start Tracking
+                Login / Register
               </button>
 
               <div
@@ -293,7 +289,7 @@ function Welcome({ onStart }) {
                 >
                   <Panel label="Win Rate" value="62%" />
                   <Panel label="Profit Factor" value="2.14" />
-                  <Panel label="Best Setup" value="IFVG" />
+                  <Panel label="Best Setup" value="AI Ranked" />
                 </div>
               </div>
             </div>
@@ -308,22 +304,67 @@ function Logo() {
   return (
     <div
       style={{
-        width: 48,
-        height: 48,
-        borderRadius: 15,
-        background: "linear-gradient(135deg, #22c55e, #064e3b)",
-        display: "grid",
-        placeItems: "center",
-        boxShadow: "0 16px 45px rgba(34,197,94,.35)",
+        display: "flex",
+        alignItems: "center",
+        gap: "14px",
       }}
     >
-      <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
-        <path d="M5 23L12 16L17 20L27 8" stroke="white" strokeWidth="3" strokeLinecap="round" />
-        <path d="M20 8H27V15" stroke="white" strokeWidth="3" strokeLinecap="round" />
-        <rect x="6" y="18" width="4" height="8" rx="1" fill="rgba(255,255,255,.75)" />
-        <rect x="14" y="12" width="4" height="14" rx="1" fill="rgba(255,255,255,.9)" />
-        <rect x="22" y="6" width="4" height="20" rx="1" fill="white" />
-      </svg>
+      <div
+        style={{
+          width: "52px",
+          height: "52px",
+          borderRadius: "18px",
+          background:
+            "linear-gradient(135deg, rgba(34,197,94,0.25), rgba(16,185,129,0.08))",
+          border: "1px solid rgba(34,197,94,0.35)",
+          display: "grid",
+          placeItems: "center",
+          boxShadow: "0 25px 60px rgba(34,197,94,0.25)",
+        }}
+      >
+        <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+          <path
+            d="M8 27L16.5 18.5L22.5 23L32 11"
+            stroke="#86efac"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M25 11H32V18"
+            stroke="#22c55e"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+
+      <div>
+        <div
+          style={{
+            fontWeight: 900,
+            fontSize: "18px",
+            letterSpacing: "-0.03em",
+            background: "linear-gradient(90deg, #fff, #a7f3d0)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          EdgeJournal
+        </div>
+
+        <div
+          style={{
+            fontSize: "12px",
+            color: "#64748b",
+            fontWeight: 700,
+            marginTop: "2px",
+          }}
+        >
+          Performance Lab
+        </div>
+      </div>
     </div>
   );
 }

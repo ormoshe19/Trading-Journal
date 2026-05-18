@@ -49,6 +49,10 @@ const startingBalance = currentJournal?.startingBalance ?? 50000;
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [user, setUser] = useState(null);
+
+const [authMode, setAuthMode] = useState("login");
+const [confirmPassword, setConfirmPassword] = useState("");
+
 const [cloudLoaded, setCloudLoaded] = useState(false);
 
 useEffect(() => {
@@ -207,23 +211,18 @@ const handleLogout = async () => {
 
   
 const sidebarStyle = {
-  width: "260px",
-  minWidth: "260px",
-  maxWidth: "260px",
-  padding: "14px 12px",
-  borderRight: "1px solid rgba(148,163,184,0.12)",
-  background: "rgba(6, 11, 22, 0.82)",
-  backdropFilter: "blur(10px)",
-  display: "flex",
-  flexDirection: "column",
-  gap: "8px",
+  width: "280px",
+  height: "100vh",
   position: "sticky",
   top: 0,
-  height: "100vh",
-  boxSizing: "border-box",
+  padding: "18px",
+  display: "flex",
+  flexDirection: "column",
   overflowY: "auto",
-  overflowX: "hidden",
-  flexShrink: 0,
+  background: "rgba(2,6,23,0.6)",
+  borderRight: "1px solid rgba(148,163,184,0.12)",
+  backdropFilter: "blur(20px)",
+  scrollbarWidth: "thin",
 };
 
 const logoWrap = {
@@ -466,257 +465,598 @@ const smallButton = {
     setActiveJournal(newJournal.id);
   };
 
-if (!user) {
-  return (
-    <div style={{ padding: "40px", color: "white" }}>
-      <h2>Login</h2>
-
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <button onClick={handleRegister}>Register</button>
-      <button onClick={handleLogin}>Login</button>
-    </div>
-  );
-}
-
 if (showWelcome && !user) {
   return <Welcome onStart={() => setShowWelcome(false)} />;
 }
 
+if (!user) {
   return (
-    <div style={shellStyle}>
-      <aside style={sidebarStyle}>
-        <div style={logoWrap}>
-          <div style={logoMark}>TC</div>
-          <div style={{ minWidth: 0 }}>
-            <div
-              style={{
-                fontWeight: "950",
-                fontSize: "15px",
-                letterSpacing: "-0.02em",
-                whiteSpace: "nowrap",
-              }}
-            >
-              TradeCoach AI
-            </div>
-            <div
-              style={{
-                color: "#8ea0c4",
-                fontSize: "11px",
-                fontWeight: "800",
-                marginTop: "2px",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Performance System
-            </div>
-          </div>
-        </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "grid",
+        placeItems: "center",
+        background:
+          "radial-gradient(circle at 20% 10%, rgba(34,197,94,0.22), transparent 32%), linear-gradient(135deg, #020617, #0f172a)",
+        color: "white",
+        fontFamily: "Inter, Arial, sans-serif",
+        padding: "24px",
+        position: "relative",
+      }}
+    >
+      <div
+        onClick={() => setShowWelcome(true)}
+        style={{
+          position: "absolute",
+          top: "24px",
+          left: "24px",
+          width: "42px",
+          height: "42px",
+          borderRadius: "50%",
+          background: "rgba(15,23,42,0.7)",
+          border: "1px solid rgba(148,163,184,0.2)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          backdropFilter: "blur(10px)",
+          transition: "0.2s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "rgba(30,41,59,0.9)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "rgba(15,23,42,0.7)";
+        }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M15 18L9 12L15 6"
+            stroke="#e2e8f0"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
 
-        <button
-          style={activeTab === "dashboard" ? sideItemActive : sideItem}
-          onClick={() => setActiveTab("dashboard")}
-        >
-          Dashboard
-        </button>
-
-        <button
-          style={activeTab === "trades" ? sideItemActive : sideItem}
-          onClick={() => setActiveTab("trades")}
-        >
-          Trades
-        </button>
-
-        <button
-          style={activeTab === "analytics" ? sideItemActive : sideItem}
-          onClick={() => setActiveTab("analytics")}
-        >
-          Analytics
-        </button>
-
-        <button
-          style={activeTab === "calendar" ? sideItemActive : sideItem}
-          onClick={() => setActiveTab("calendar")}
-        >
-          Calendar
-        </button>
-
-        <button
-          style={activeTab === "ai" ? sideItemActive : sideItem}
-          onClick={() => setActiveTab("ai")}
-        >
-          AI Analytics
-        </button>
-
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "430px",
+          padding: "34px",
+          borderRadius: "26px",
+          background: "rgba(15,23,42,0.82)",
+          border: "1px solid rgba(148,163,184,0.18)",
+          boxShadow: "0 30px 90px rgba(0,0,0,0.45)",
+        }}
+      >
         <div
-          style={{
-            marginTop: "18px",
-            paddingTop: "14px",
-            borderTop: "1px solid rgba(148,163,184,0.12)",
-          }}
-        >
-          <div style={sectionTitle}>JOURNALS</div>
-
-          <div style={{ display: "grid", gap: "8px" }}>
-            {journals.map((journal) => (
-              <div
-                key={journal.id}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(0, 1fr) 32px 32px 32px",
-                  gap: "6px",
-                  alignItems: "center",
-                  width: "100%",
-minWidth: 0,
-overflow: "hidden",
-boxSizing: "border-box",
-                }}
-              >
-                <button
-                  onClick={() => setActiveJournal(journal.id)}
-                  style={
-                    activeJournal === journal.id
-                      ? {
-                          ...sideItemActive,
-                          height: "38px",
-padding: "0 12px",
-fontSize: "13px",
-display: "flex",
-alignItems: "center",
-                        }
-                      : {
-                          ...sideItem,
-                          height: "38px",
-padding: "0 12px",
-fontSize: "13px",
-display: "flex",
-alignItems: "center",
-                        }
-                  }
-                  title={journal.name}
-                >
-                  {journal.name}
-                </button>
-
-                <button
-                  onClick={() => handleRenameJournal(journal.id)}
-                  style={smallButton}
-                  title="Rename journal"
-                >
-                  ✎
-                </button>
-
-                <button
-                  onClick={() => handleDuplicateJournal(journal.id)}
-                  style={smallButton}
-                  title="Duplicate journal"
-                >
-                  ⧉
-                </button>
-
-                <button
-                  onClick={() => handleDeleteJournal(journal.id)}
-                  style={{
-                    ...smallButton,
-                    color: journal.id === "main" ? "#64748b" : "#fca5a5",
-                    cursor: journal.id === "main" ? "not-allowed" : "pointer",
-                  }}
-                  title="Delete journal"
-                  disabled={journal.id === "main"}
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={() => {
-              const name = prompt("Journal name?");
-              if (!name || !name.trim()) return;
-
-              const newJournal = {
-                id: Date.now().toString(),
-                name: name.trim(),
-              };
-
-              setJournals((prev) => [...prev, newJournal]);
-              setActiveJournal(newJournal.id);
-            }}
-            style={{
-              ...sideItem,
-              marginTop: "10px",
-              textAlign: "center",
-              fontWeight: "900",
-            }}
-          >
-            + Add Journal
-          </button>
-        </div>
-
-       <div
   style={{
-    marginTop: "16px",
-    paddingTop: "14px",
-    borderTop: "1px solid rgba(148,163,184,0.12)",
-    display: "grid",
-    gap: "8px",
+    fontWeight: 900,
+    fontSize: "20px",
+    letterSpacing: "-0.04em",
+    background: "linear-gradient(90deg, #ffffff, #a7f3d0, #22c55e)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    textShadow: "0 0 12px rgba(167,243,208,0.25)",
+    marginBottom: "8px",
   }}
 >
-  <button
-    onClick={handleExportBackup}
+  EdgeJournal
+</div>
+
+        <h1 style={{ margin: "10px 0 8px", fontSize: "34px" }}>
+  {authMode === "login" ? "Build Your Edge" : "Create Your Account"}
+</h1>
+
+        <p style={{ color: "#94a3b8", marginBottom: "26px" }}>
+          Login or create an account to continue.
+        </p>
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{
+            width: "100%",
+            boxSizing: "border-box",
+            padding: "15px 16px",
+            borderRadius: "14px",
+            border: "1px solid rgba(148,163,184,0.22)",
+            background: "rgba(2,6,23,0.7)",
+            color: "white",
+            outline: "none",
+            marginBottom: "12px",
+            fontSize: "15px",
+          }}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{
+            width: "100%",
+            boxSizing: "border-box",
+            padding: "15px 16px",
+            borderRadius: "14px",
+            border: "1px solid rgba(148,163,184,0.22)",
+            background: "rgba(2,6,23,0.7)",
+            color: "white",
+            outline: "none",
+            marginBottom: "18px",
+            fontSize: "15px",
+          }}
+        />
+
+{authMode === "register" && (
+  <input
+    type="password"
+    placeholder="Confirm Password"
+    value={confirmPassword}
+    onChange={(e) => setConfirmPassword(e.target.value)}
     style={{
-      ...sideItem,
-      textAlign: "left",
-      fontWeight: "900",
+      width: "100%",
+      boxSizing: "border-box",
+      padding: "15px 16px",
+      borderRadius: "14px",
+      border: "1px solid rgba(148,163,184,0.22)",
+      background: "rgba(2,6,23,0.7)",
+      color: "white",
+      outline: "none",
+      marginBottom: "18px",
+      fontSize: "15px",
+    }}
+  />
+)}
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <button
+            onClick={() => {
+  if (authMode === "register") {
+    setAuthMode("login");
+    return;
+  }
+
+  handleLogin();
+}}
+            style={{
+              padding: "14px",
+              borderRadius: "14px",
+              border: "none",
+              background: "linear-gradient(135deg, #22c55e, #16a34a)",
+              color: "#03140a",
+              fontWeight: 1000,
+              cursor: "pointer",
+            }}
+          >
+            {authMode === "login" ? "Login" : "Back to Login"}
+          </button>
+
+          <button
+  onClick={() => {
+    if (authMode === "login") {
+      setAuthMode("register");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    handleRegister();
+  }}
+
+  onMouseEnter={(e) => {
+    e.target.style.background = "rgba(30,41,59,0.95)";
+    e.target.style.transform = "translateY(-1px)";
+    e.target.style.boxShadow = "0 8px 25px rgba(0,0,0,0.35)";
+  }}
+
+  onMouseLeave={(e) => {
+    e.target.style.background = "rgba(15,23,42,0.75)";
+    e.target.style.transform = "translateY(0)";
+    e.target.style.boxShadow = "none";
+  }}
+
+  style={{
+    padding: "14px",
+    borderRadius: "14px",
+    border: "1px solid rgba(148,163,184,0.3)",
+    background: "rgba(15,23,42,0.75)",
+    color: "#e2e8f0",
+    fontWeight: 1000,
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  }}
+>
+  {authMode === "login" ? "Register" : "Create Account"}
+</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+  return (
+<div style={shellStyle}>
+
+<style>{`
+  /* Chrome / Edge */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(99,102,241,0.4);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(99,102,241,0.7);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99,102,241,0.5) transparent;
+  }
+`}</style>
+
+<aside
+  style={{
+    ...sidebarStyle,
+  }}
+>
+  <style>
+    {`
+      .sidebar-scroll::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+      }
+    `}
+  </style>
+
+ <div
+  style={{
+    minHeight: "100vh",
+    height: "auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  }}
+>
+    <div
+      style={{
+        padding: "16px",
+        borderRadius: "22px",
+        background:
+          "linear-gradient(180deg, rgba(15,23,42,0.92), rgba(15,23,42,0.58))",
+        border: "1px solid rgba(148,163,184,0.14)",
+        boxShadow: "0 20px 60px rgba(0,0,0,0.22)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "13px" }}>
+        <div
+          style={{
+            width: "46px",
+            height: "46px",
+            borderRadius: "17px",
+            background:
+              "linear-gradient(135deg, rgba(34,197,94,0.3), rgba(16,185,129,0.08))",
+            border: "1px solid rgba(34,197,94,0.34)",
+            display: "grid",
+            placeItems: "center",
+            boxShadow: "0 18px 45px rgba(34,197,94,0.2)",
+          }}
+        >
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+            <path
+              d="M8 27L16.5 18.5L22.5 23L32 11"
+              stroke="#86efac"
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M25 11H32V18"
+              stroke="#22c55e"
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+
+        <div style={{ minWidth: 0 }}>
+          <div
+            style={{
+              fontWeight: 950,
+              fontSize: "20px",
+              letterSpacing: "-0.04em",
+              whiteSpace: "nowrap",
+              background: "linear-gradient(90deg, #ffffff, #a7f3d0)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              textShadow: "0 0 10px rgba(34,197,94,0.35)",
+            }}
+          >
+            EdgeJournal
+          </div>
+
+          <div
+            style={{
+              color: "#8ea0c4",
+              fontSize: "11px",
+              fontWeight: 800,
+              marginTop: "4px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Performance Lab
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style={{ display: "grid", gap: "7px" }}>
+      {[
+        ["dashboard", "Dashboard", "⌁"],
+        ["trades", "Trades", "↗"],
+        ["analytics", "Analytics", "◈"],
+        ["calendar", "Calendar", "◷"],
+        ["ai", "AI Analytics", "✦"],
+      ].map(([tab, label, icon]) => (
+        <button
+          key={tab}
+          onClick={() => setActiveTab(tab)}
+          style={{
+            ...(activeTab === tab ? sideItemActive : sideItem),
+            height: "42px",
+            display: "flex",
+            alignItems: "center",
+            gap: "11px",
+            padding: "0 14px",
+            fontSize: "13px",
+            fontWeight: 900,
+            textAlign: "left",
+          }}
+        >
+          <span style={{ width: "18px", opacity: 0.9 }}>{icon}</span>
+          <span>{label}</span>
+        </button>
+      ))}
+    </div>
+
+   <div
+  style={{
+    paddingTop: "14px",
+    borderTop: "1px solid rgba(148,163,184,0.08)",
+  }}
+>
+  <div
+    style={{
+      ...sectionTitle,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: "10px",
     }}
   >
-    Export Backup
+    <span>JOURNALS</span>
+    <span style={{ color: "#64748b", fontSize: "11px" }}>
+      {journals.length}
+    </span>
+  </div>
+
+  <div style={{ display: "grid", gap: "8px" }}>
+    {journals.map((journal) => (
+      <div
+        key={journal.id}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) 31px 31px 31px",
+          gap: "6px",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <button
+          onClick={() => setActiveJournal(journal.id)}
+          title={journal.name}
+          style={{
+            ...(activeJournal === journal.id ? sideItemActive : sideItem),
+            height: "39px",
+            padding: "0 12px",
+            fontSize: "13px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            overflow: "hidden",
+          }}
+        >
+          <span style={{ color: "#a7f3d0", opacity: 0.85 }}>•</span>
+          <span
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {journal.name}
+          </span>
+        </button>
+
+        <button
+          onClick={() => handleRenameJournal(journal.id)}
+          style={smallButton}
+          title="Rename journal"
+        >
+          ✎
+        </button>
+
+        <button
+          onClick={() => handleDuplicateJournal(journal.id)}
+          style={smallButton}
+          title="Duplicate journal"
+        >
+          ⧉
+        </button>
+
+        <button
+          onClick={() => handleDeleteJournal(journal.id)}
+          style={{
+            ...smallButton,
+            color: journal.id === "main" ? "#64748b" : "#fca5a5",
+            cursor: journal.id === "main" ? "not-allowed" : "pointer",
+          }}
+          title="Delete journal"
+          disabled={journal.id === "main"}
+        >
+          ×
+        </button>
+      </div>
+    ))}
+  </div>
+
+  <button
+    onClick={() => {
+      const name = prompt("Journal name?");
+      if (!name || !name.trim()) return;
+
+      const newJournal = {
+        id: Date.now().toString(),
+        name: name.trim(),
+      };
+
+      setJournals((prev) => [...prev, newJournal]);
+      setActiveJournal(newJournal.id);
+    }}
+    style={{
+      ...sideItem,
+      marginTop: "6px",
+      height: "34px",
+      textAlign: "center",
+      fontWeight: 950,
+      border: "1px solid rgba(148,163,184,0.1)",
+    }}
+  >
+    + Add Journal
   </button>
 
-  <label
+  <div
     style={{
-      ...sideItem,
-      textAlign: "left",
-      fontWeight: "900",
-      display: "block",
-      cursor: "pointer",
+      marginTop: "8px",
+      display: "grid",
+      gap: "6px",
     }}
   >
-    Import Backup
-    <input
-      type="file"
-      accept="application/json"
-      onChange={handleImportBackup}
-      style={{ display: "none" }}
-    />
-  </label>
+    <button
+      onClick={handleExportBackup}
+      style={{
+        height: "39px",
+        textAlign: "left",
+        fontWeight: 900,
+        border: "none",
+        outline: "none",
+        borderRadius: "14px",
+        background: "rgba(15,23,42,0.55)",
+        color: "#e5e7eb",
+        padding: "0 16px",
+        cursor: "pointer",
+      }}
+    >
+      Export Backup
+    </button>
+
+    <label
+      style={{
+        height: "34px",
+        textAlign: "left",
+        fontWeight: 900,
+fontSize: "14px",
+        border: "none",
+        outline: "none",
+        borderRadius: "14px",
+        background: "rgba(15,23,42,0.55)",
+        color: "#e5e7eb",
+        padding: "0 16px",
+        display: "flex",
+        alignItems: "center",
+        cursor: "pointer",
+      }}
+    >
+      Import Backup
+      <input
+        type="file"
+        accept="application/json"
+        onChange={handleImportBackup}
+        style={{ display: "none" }}
+      />
+    </label>
+  </div>
+</div>
 </div>
 </aside>
-
       <main style={mainStyle}>
 
-  <div style={{ marginBottom: "20px" }}>
-    <span style={{ marginRight: "10px" }}>
-      Logged in as: {user?.email}
-    </span>
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "20px",
+    padding: "12px 18px",
+    borderRadius: "14px",
+    background: "rgba(15,23,42,0.6)",
+    border: "1px solid rgba(148,163,184,0.15)",
+  }}
+>
+  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+    <div
+      style={{
+        width: "34px",
+        height: "34px",
+        borderRadius: "50%",
+        background: "#6366f1",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: "bold",
+      }}
+    >
+      {user?.email?.[0]?.toUpperCase()}
+    </div>
 
-    <button onClick={handleLogout}>
-      Logout
-    </button>
+    <span style={{ fontSize: "14px", color: "#cbd5f5" }}>
+      {user?.email}
+    </span>
   </div>
+
+  <button
+    onClick={handleLogout}
+    style={{
+      padding: "6px 14px",
+      borderRadius: "10px",
+      background: "rgba(239,68,68,0.15)",
+      color: "#f87171",
+      border: "1px solid rgba(239,68,68,0.3)",
+      cursor: "pointer",
+      fontWeight: 600,
+      fontSize: "13px",
+    }}
+  >
+      Logout
+  </button>
+</div>
 
   <div style={activeJournalBadgeStyle}>
     <span>📁</span>
